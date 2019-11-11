@@ -1,0 +1,104 @@
+docker run --name mysql_test -P -v mysql_test_volume:/var/lib/mysql -v mysql_test_volume:/tmp -e MYSQL_ROOT_PASSWORD=root1234 -d mysql --character-set-server=utf8 --collation-server=utf8_unicode_ci --default-authentication-plugin=mysql_native_password
+
+
+#docker run -it -v mysql_test_volume:/var/lib/mysql -v mysql_test_volume:/tmp alpine /bin/sh
+
+docker run --rm -v mysql_test_volume:/var/lib/mysql -v mysql_test_volume:/tmp busybox  tar cvf /tmp/bakcup.tar  /var/lib/mysql/
+
+docker run -v mysql_test_volume:/var/lib/mysql -v mysql_test_volume:/tmp -d busybox
+docker cp  hopeful_sinoussi:/tmp/bakcup.tar ./
+
+
+docker stop mysql_test
+docker start mysql_test
+
+docker run -v mysql_test_volume:/var/lib/mysql -v mysql_test_volume:/tmp -d busybox
+docker cp  ./bakcup.tar  condescending_ritchie:/tmp
+docker run --rm -v mysql_test_volume:/var/lib/mysql -v mysql_test_volume:/tmp busybox  tar cvf /tmp/bakcup.tar  /var/lib/mysql/
+
+docker run --rm -v mysql_test_volume:/var/lib/mysql -v mysql_test_volume:/tmp busybox  tar xvf /tmp/bakcup.tar
+
+
+docker start mysql_test
+
+
+docker exec mysql_test sh -c 'exec mysqldump --all-databases -uroot -proot1234' > /tmp/all-databases.sql
+docker cp  mysql_test:/tmp/all-databases.sql ./
+
+
+
+
+aws_saa
+https://translation.googleapis.com/v3beta1/projects/maneko-223344/locations/location/supportedLanguages
+en_US
+
+
+
+curl -X GET \
+-H "Authorization: Bearer b1f0bd175b163a3abf89960945e0b77922c1e0c8" \
+https://translation.googleapis.com/v3beta1/projects/maneko-223344/locations/location/supportedLanguages
+
+
+curl -X POST \
+     -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
+     -H 'Content-Type: application/json' --data "{
+     source_language_code: 'en',
+     target_language_code: 'ru',
+     contents: ['Dr. Watson, come here!']
+}" "https://translation.googleapis.com/v3beta1/projects/maneko-223344/locations/global:translateText"
+
+
+
+
+"https://translation.googleapis.com/v3beta1/projects/maneko-223344/locations/global:translateText"
+ERROR: (gcloud.auth.application-default.print-access-token) The Application Default Credentials are not available. They are available if running in Google Compute Engine. Otherwise, the environment variable GOOGLE_APPLICATION_CREDENTIALS must be defined pointing to a file defining the credentials. See https://developers.google.com/accounts/docs/application-default-credentials for more information.
+
+
+
+GOOGLE_APPLICATION_CREDENTIALS
+
+export GOOGLE_APPLICATION_CREDENTIALS="/mnt/c/work/chenxin/keys/maneko-4de39505ae04.json"
+
+
+
+curl -X GET \
+-H "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
+https://translation.googleapis.com/v3beta1/projects/maneko-223344/locations/global/supportedLanguages
+
+
+
+
+docker run --name mysql_aws_saa -p 18801:3306 -v mysql_aws_saa_volume:/var/lib/mysql -v mysql_aws_saa_volume:/tmp -e MYSQL_ROOT_PASSWORD=root1234 -d mysql --character-set-server=utf8 --collation-server=utf8_unicode_ci --default-authentication-plugin=mysql_native_password
+
+docker cp ./all-databases.sql mysql_aws_saa:/tmp/
+
+
+docker exec -i mysql_aws_saa sh -c 'exec mysql -uroot -proot1234' < /tmp/all-databases.sql
+
+docker rm -f mysql_aws_saa
+docker volume rm mysql_aws_saa_volume
+docker-compose up
+
+
+docker exec -it mysql_aws_saa bash
+
+docker rm -f mysql_aws_saa
+docker volume rm mysql_aws_saa_volume
+
+docker-compose up -d
+
+docker cp ./docker-entrypoint-initdb.d/all-databases.sql mysql_aws_saa:/docker-entrypoint-initdb.d/
+docker exec -i mysql_aws_saa sh -c 'exec mysql -uroot -proot1234' < ./docker-entrypoint-initdb.d/all-databases.sql
+
+
+http_proxy=http://tlzshuang:8953890535@oym.proxy.nic.fujitsu.com:8080
+
+tlzshuang
+8953890535
+
+docker image build --build-arg http_proxy=http://tlzshuang:8953890535@oym.proxy.nic.fujitsu.com:8080 --build-arg https_proxy=http://tlzshuang:8953890535@oym.proxy.nic.fujitsu.com:8080 .
+
+
+
+https://blog.csdn.net/chaofanwei/article/details/13018753
+

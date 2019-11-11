@@ -1,0 +1,4 @@
+docker build --build-arg http_proxy=http://tlzshuang:8953890535@oym.proxy.nic.fujitsu.com:8080 --build-arg https_proxy=http://tlzshuang:8953890535@oym.proxy.nic.fujitsu.com:8080 -t python_aws_saa .
+
+
+docker run -it -p 18803:5000 --name python_aws_saa python_aws_saa 
