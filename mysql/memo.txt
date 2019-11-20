@@ -1,0 +1,10 @@
+docker-compose up -d
+docker-compose exec db mysql -V
+docker-compose exec db bash -c 'mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}'
+show variables like '%char%';
+select Host, User from mysql.user;
+docker-compose down --volumes
+docker-compose up -d
+
+
+docker exec mysql_aws_saa sh -c 'exec mysqldump --all-databases -uroot -p"$DB_PASS"' > initdb.d/aws_saa.sql
