@@ -2,11 +2,12 @@ from flask import current_app, abort
 from flask_restful import Resource, fields, marshal_with
 from flask_restful.reqparse import RequestParser
 from sqlalchemy.exc import SQLAlchemyError
-from  sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func
 
 from app import hash_ids, HashidsEncode
 from models import db
 from common import code, pretty_result
+from models.choice import ChoiceModel
 from models.question import QuestionModel
 from models.language import LanguageModel
 import time
@@ -65,12 +66,23 @@ class QuestionsLanguagesResource(Resource):
             return pretty_result(code.OK, start_time=start_time, data={'questions': {'languages': languages}})
 
 
+language_fields = {
+    'code': fields.String,
+}
+
+choice_fields = {
+    'choice_id': fields.Integer,
+    'choice': fields.String,
+}
+
 question_fields = {
     # 'id': HashidsEncode(attribute='id'),
     'question_id': HashidsEncode(attribute='question_id'),
     'language_id': HashidsEncode(attribute='language_id'),
     'question': fields.String,
     'remarks': fields.String,
+    'language': fields.Nested(language_fields),
+    'choices': fields.List(fields.Nested(choice_fields)),
 }
 
 response_questions_fields = copy.copy(response_base_fields)
@@ -99,7 +111,12 @@ class QuestionsListResource(Resource):
         language_id = hash_ids.decode(args.language_id)
 
         try:
-            questions = QuestionModel.query.filter(QuestionModel.useflg). \
+            questions = QuestionModel.query. \
+                join(ChoiceModel,
+                     ChoiceModel.language_id == QuestionModel.language_id \
+                     and ChoiceModel.question_id == QuestionModel.question_id \
+                     and ChoiceModel.useflg). \
+                filter(QuestionModel.useflg). \
                 filter(QuestionModel.language_id == language_id). \
                 limit(args.limit).offset(args.offset).all()
         except SQLAlchemyError as e:
@@ -110,6 +127,9 @@ class QuestionsListResource(Resource):
             return pretty_result(code.OK, start_time=start_time, data={'questions': questions})
 
 
+language_fields = {
+    'code': fields.String,
+}
 
 question_fields = {
     # 'id': HashidsEncode(attribute='id'),
@@ -117,6 +137,7 @@ question_fields = {
     'language_id': HashidsEncode(attribute='language_id'),
     'question': fields.String,
     'remarks': fields.String,
+    'language': fields.Nested(language_fields),
 }
 
 response_question_fields = copy.copy(response_base_fields)
@@ -148,8 +169,10 @@ class QuestionResource(Resource):
         else:
             return pretty_result(code.OK, start_time=start_time, data={'question': question})
 
+
 response_question2_fields = copy.copy(response_base_fields)
 response_question2_fields['data'] = fields.Nested({'question': fields.Nested(question_fields)})
+
 
 class QuestionRandomResource(Resource):
 

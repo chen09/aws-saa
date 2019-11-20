@@ -8,3 +8,5 @@ class LanguageModel(db.Model, BaseModel):
     code = db.Column(db.String)
     source = db.Column(db.Boolean)
     target = db.Column(db.Boolean)
+
+    questions = db.relationship("QuestionModel", back_populates="language")
