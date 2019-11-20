@@ -9,4 +9,4 @@ class ChoiceModel(db.Model, BaseModel):
     language_id = db.Column(db.Integer, db.ForeignKey('question.language_id'))
     choice_id = db.Column(db.Integer)
     choice = db.Column(db.String)
-    question = db.relationship("QuestionModel", foreign_keys=[question_id, language_id])
+    # question = db.relationship("QuestionModel", foreign_keys=[question_id, language_id])

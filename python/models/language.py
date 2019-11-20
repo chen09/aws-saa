@@ -9,4 +9,4 @@ class LanguageModel(db.Model, BaseModel):
     source = db.Column(db.Boolean)
     target = db.Column(db.Boolean)
 
-    questions = db.relationship("QuestionModel", back_populates="language")
+    # questions = db.relationship("QuestionModel", back_populates="language")

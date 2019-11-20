@@ -1,8 +1,10 @@
-import hashlib
-from pytz import timezone
-from .code import CODE_MSG_MAP
 import datetime
+import hashlib
 import time
+
+from pytz import timezone
+
+from .code import CODE_MSG_MAP
 
 
 def pretty_result(code, msg=None, start_time=datetime.datetime.now(), data=None):

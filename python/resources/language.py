@@ -48,7 +48,7 @@ class LanguageListResource(Resource):
         except SQLAlchemyError as e:
             current_app.logger.error(e)
             db.session.rollback()
-            return pretty_result(code.DB_ERROR, 'DB Error!')
+            return pretty_result(code.DB_ERROR, 'DB Error!', start_time=start_time)
         else:
             return pretty_result(code.OK, start_time=start_time, data={'languages': languages})
 

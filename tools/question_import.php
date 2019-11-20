@@ -11,9 +11,9 @@ if (!isset($options['l'])) {
 $language = $options['l'];
 $FILENAME = "AWS-SAA-C01.${language}.csv";
 
-$handle = fopen(__DIR__ . "/../" . $FILENAME, "r");
+$handle = fopen(__DIR__ . "/" . $FILENAME, "r");
 if ($handle == FALSE) {
-    echo __DIR__ . "/../" . $FILENAME . " open failed. \n";
+    echo __DIR__ . "/" . $FILENAME . " open failed. \n";
     exit();
 }
 
@@ -57,7 +57,7 @@ while (($data = fgetcsv($handle)) !== FALSE) {
         $row['choice_id'] = $i;
         $row['choice'] = trim($choices[$i]);
 //        var_dump($row);
-//        $id = $db->insert('choice', $row);
+        $id = $db->insert('choice', $row);
     }
 
 
@@ -67,7 +67,7 @@ while (($data = fgetcsv($handle)) !== FALSE) {
         $row = [];
         $row['question_id'] = $question_id;
         $row['choice_id'] = $answer_id;
-//        $id = $db->insert('answer', $row);
+        $id = $db->insert('answer', $row);
     }
 
 }

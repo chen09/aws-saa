@@ -111,14 +111,20 @@ class QuestionsListResource(Resource):
         language_id = hash_ids.decode(args.language_id)
 
         try:
-            questions = QuestionModel.query. \
-                join(ChoiceModel,
-                     ChoiceModel.language_id == QuestionModel.language_id \
-                     and ChoiceModel.question_id == QuestionModel.question_id \
-                     and ChoiceModel.useflg). \
-                filter(QuestionModel.useflg). \
-                filter(QuestionModel.language_id == language_id). \
-                limit(args.limit).offset(args.offset).all()
+            # questions = QuestionModel.query. \
+            #     join(ChoiceModel,
+            #          ChoiceModel.language_id == QuestionModel.language_id \
+            #          and ChoiceModel.question_id == QuestionModel.question_id \
+            #          and ChoiceModel.useflg). \
+            #     filter(QuestionModel.useflg). \
+            #     filter(QuestionModel.language_id == language_id). \
+            #     limit(args.limit).offset(args.offset).all()
+            # filter(LanguageModel.useflg)
+            questions = QuestionModel.query.\
+                filter(QuestionModel.useflg).\
+                limit(args.limit).\
+                offset(args.offset).\
+                all()
         except SQLAlchemyError as e:
             current_app.logger.error(e)
             db.session.rollback()
