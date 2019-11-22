@@ -14,7 +14,7 @@ class QuestionModel(db.Model, BaseModel):
     remarks = db.Column(db.String)
     # language = db.relationship("LanguageModel", back_populates="questions")
     language = db.relationship("LanguageModel")
-    # choices = db.relationship("ChoiceModel", backref="question")
+    # choices = db.relationship("ChoiceModel")
 
     # choices = relationship("ChoiceModel")
     # choices = db.relationship(

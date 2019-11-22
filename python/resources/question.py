@@ -27,8 +27,10 @@ class QuestionsCountResource(Resource):
 
     def get(self):
         start_time = time.time()
+        self.parser.add_argument("language_id", type=str, location="args", default='9erj4rd8')
+        args = self.parser.parse_args()
         '''17 is en'''
-        language_id = 17
+        language_id = hash_ids.decode(args.language_id)
         count = QuestionModel.query.filter(QuestionModel.language_id == language_id).count()
 
         data = {
@@ -120,10 +122,10 @@ class QuestionsListResource(Resource):
             #     filter(QuestionModel.language_id == language_id). \
             #     limit(args.limit).offset(args.offset).all()
             # filter(LanguageModel.useflg)
-            questions = QuestionModel.query.\
-                filter(QuestionModel.useflg).\
-                limit(args.limit).\
-                offset(args.offset).\
+            questions = QuestionModel.query. \
+                filter(QuestionModel.useflg). \
+                limit(args.limit). \
+                offset(args.offset). \
                 all()
         except SQLAlchemyError as e:
             current_app.logger.error(e)
@@ -166,7 +168,7 @@ class QuestionResource(Resource):
             question = QuestionModel.query.filter(QuestionModel.language_id == language_id). \
                 filter(QuestionModel.question_id == question_id). \
                 one()
-            print(question)
+            # print(question)
             if not question: abort(404)
         except SQLAlchemyError as e:
             current_app.logger.error(e)
@@ -174,6 +176,7 @@ class QuestionResource(Resource):
             return pretty_result(code.DB_ERROR, 'DB Error!')
         else:
             return pretty_result(code.OK, start_time=start_time, data={'question': question})
+
 
 
 response_question2_fields = copy.copy(response_base_fields)
@@ -193,7 +196,7 @@ class QuestionRandomResource(Resource):
         try:
             question = QuestionModel.query.filter(QuestionModel.language_id == language_id). \
                 order_by(func.rand()).limit(1).one()
-            print(question)
+            # print(question)
             if not question: abort(404)
         except SQLAlchemyError as e:
             current_app.logger.error(e)
