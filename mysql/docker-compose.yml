@@ -1,13 +1,14 @@
 version: "3"
 services:
   db:
-    image: mysql
+    build: ./sql
     container_name: mysql_aws_saa
     volumes:
       - aws_saa_volume:/var/lib/mysql
-      - ./logs:/var/log/mysql
-      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./initdb.d:/docker-entrypoint-initdb.d
+      - aws_saa_volume:/var/log/mysql
+      # - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      # - ./docker/mysql:/etc/mysql/conf.d
+      # - ./initdb.d:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_DATABASE=${DB_NAME}
       # - MYSQL_USER=${DB_USER}
