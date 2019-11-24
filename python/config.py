@@ -49,7 +49,7 @@ class DevelopConfig(object):
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{user}:{password}@{host}:{port}/aws_saa?charset=utf8'.format(**{
         'user': os.getenv('DB_USER', 'root'),
         'password': os.getenv('DB_PASSWORD', 'root1234'),
-        'host': os.getenv('DB_HOST', '192.168.99.100'),
+        'host': os.getenv('DB_HOST', 'localhost'),
         'port': os.getenv('DB_PORT', '18801'),
     })
 
