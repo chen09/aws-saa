@@ -14,9 +14,13 @@ class QuestionModel(db.Model, BaseModel):
     remarks = db.Column(db.String)
     # language = db.relationship("LanguageModel", back_populates="questions")
     language = db.relationship("LanguageModel")
-    # choices = db.relationship("ChoiceModel")
 
-    # choices = relationship("ChoiceModel")
+    # choices = db.relationship("ChoiceModel", foreign_keys=[question_id, language_id], primaryjoin=)
+    choices = db.relationship("ChoiceModel", foreign_keys=[question_id, language_id], uselist=True,
+                              order_by="ChoiceModel.choice_id",
+                              primaryjoin="QuestionModel.question_id==ChoiceModel.question_id and QuestionModel.language_id==ChoiceModel.language_id")
+
+    # choices = relationship
     # choices = db.relationship(
     #     'ChoiceModel',
     #     secondary=ChoiceModel.__tablename__,

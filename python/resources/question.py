@@ -75,6 +75,7 @@ language_fields = {
 choice_fields = {
     'choice_id': fields.Integer,
     'choice': fields.String,
+    # 'useflg': fields.Boolean
 }
 
 question_fields = {
@@ -113,16 +114,10 @@ class QuestionsListResource(Resource):
         language_id = hash_ids.decode(args.language_id)
 
         try:
-            # questions = QuestionModel.query. \
-            #     join(ChoiceModel,
-            #          ChoiceModel.language_id == QuestionModel.language_id \
-            #          and ChoiceModel.question_id == QuestionModel.question_id \
-            #          and ChoiceModel.useflg). \
-            #     filter(QuestionModel.useflg). \
-            #     filter(QuestionModel.language_id == language_id). \
-            #     limit(args.limit).offset(args.offset).all()
-            # filter(LanguageModel.useflg)
             questions = QuestionModel.query. \
+                outerjoin(ChoiceModel,
+                          ChoiceModel.language_id == QuestionModel.language_id \
+                          and ChoiceModel.question_id == QuestionModel.question_id). \
                 filter(QuestionModel.useflg). \
                 limit(args.limit). \
                 offset(args.offset). \
@@ -176,7 +171,6 @@ class QuestionResource(Resource):
             return pretty_result(code.DB_ERROR, 'DB Error!')
         else:
             return pretty_result(code.OK, start_time=start_time, data={'question': question})
-
 
 
 response_question2_fields = copy.copy(response_base_fields)
