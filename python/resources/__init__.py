@@ -3,6 +3,7 @@ from flask_restful import fields
 auditData_fields = {
     'requestHost': fields.String,
     'serverId': fields.String,
+    'environment': fields.String,
     'release': fields.String,
     'processTime': fields.Float,
     'timestamp': fields.String,

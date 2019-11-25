@@ -1,10 +1,12 @@
 import datetime
 import hashlib
 import time
-
+from flask import request
 from pytz import timezone
 
 from .code import CODE_MSG_MAP
+
+from config import SERVER_ID, RELEASE, ENVIRONMENT
 
 
 def pretty_result(code, msg=None, start_time=datetime.datetime.now(), data=None):
@@ -13,10 +15,10 @@ def pretty_result(code, msg=None, start_time=datetime.datetime.now(), data=None)
 
     return {
         'auditData': {
-            'requestHost': 'IP From where the petition was sent to the system',
-            'serverId': 'Server code or ID(It is for internal use)',
-            'environment': 'Environment where the request has been sent and processed',
-            'release': 'Internal Release information',
+            'requestHost': request.environ.get('HTTP_X_REAL_IP', request.remote_addr),
+            'serverId': SERVER_ID,
+            'environment': ENVIRONMENT,
+            'release': RELEASE,
             'processTime': time.time() - start_time,
             'timestamp': datetime.datetime.now().astimezone(timezone('UTC')).isoformat(),
         },

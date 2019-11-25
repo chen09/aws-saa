@@ -1,6 +1,21 @@
 import os
 import multiprocessing
 
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+HASHIDS_SALT_LANGUAGE = os.environ.get("HASHIDS_SALT_LANGUAGE")
+HASHIDS_SALT_QUESTION = os.environ.get("HASHIDS_SALT_QUESTION")
+HASHIDS_SALT_CHOICE = os.environ.get("HASHIDS_SALT_CHOICE")
+
+SERVER_ID = os.environ.get("SERVER_ID")
+RELEASE = os.environ.get("RELEASE")
+ENVIRONMENT = os.environ.get("ENVIRONMENT")
+
 MODE = 'develop'  # develop: 开发模式; production: 生产模式
 
 
@@ -21,10 +36,10 @@ class ProductionConfig(object):
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(os.path.dirname(__file__), 'example.db')
 
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{user}:{password}@{host}:{port}/aws_saa?charset=utf8'.format(**{
-        'user': os.getenv('DB_USER', 'root'),
-        'password': os.getenv('DB_PASSWORD', 'root1234'),
-        'host': os.getenv('DB_HOST', 'localhost'),
-        'port': os.getenv('DB_PORT', '18801'),
+        'user': os.environ.get("DB_USER"),
+        'password': os.environ.get("DB_PASSWORD"),
+        'host': os.environ.get("DB_HOST"),
+        'port': os.environ.get("DB_PORT"),
     })
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -47,10 +62,10 @@ class DevelopConfig(object):
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(os.path.dirname(__file__), 'example.db')
 
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{user}:{password}@{host}:{port}/aws_saa?charset=utf8'.format(**{
-        'user': os.getenv('DB_USER', 'root'),
-        'password': os.getenv('DB_PASSWORD', 'root1234'),
-        'host': os.getenv('DB_HOST', 'localhost'),
-        'port': os.getenv('DB_PORT', '18801'),
+        'user': os.environ.get("DB_USER"),
+        'password': os.environ.get("DB_PASSWORD"),
+        'host': os.environ.get("DB_HOST"),
+        'port': os.environ.get("DB_PORT"),
     })
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False

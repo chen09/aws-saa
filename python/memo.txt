@@ -1,4 +1,25 @@
 docker build --build-arg http_proxy=http://tlzshuang:8953890535@oym.proxy.nic.fujitsu.com:8080 --build-arg https_proxy=http://tlzshuang:8953890535@oym.proxy.nic.fujitsu.com:8080 -t python_aws_saa .
 
 
-docker run -it -p 18803:5000 --name python_aws_saa python_aws_saa 
+docker run -it -p 18803:5000 --name python_aws_saa python_aws_saa
+
+
+.env file
+
+DB_HOST=192.168.99.100
+DB_PORT=18801
+DB_USER=root
+DB_PASSWORD=root1234
+
+HASHIDS_SALT_LANGUAGE = cvjruqw8wv357lw5
+HASHIDS_SALT_QUESTION = 2c4w6ag2rtqemd3e
+HASHIDS_SALT_CHOICE   = slw82kdy1eeovgsd
+
+# 61h0zvqzr03niobm
+# jwv9wzdj3mj74g85
+# sbra4w9qeu9byhgc
+
+SERVER_ID=local_0001
+RELEASE=0.01a
+
+ENVIRONMENT='Environment where the request has been sent and processed'

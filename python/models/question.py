@@ -1,8 +1,9 @@
 from . import db
 from .base import BaseModel
 
-
 # from .language import LanguageModel
+from .choice import ChoiceModel
+from .answer import AnswerModel
 
 
 class QuestionModel(db.Model, BaseModel):
@@ -16,9 +17,14 @@ class QuestionModel(db.Model, BaseModel):
     language = db.relationship("LanguageModel")
 
     # choices = db.relationship("ChoiceModel", foreign_keys=[question_id, language_id], primaryjoin=)
-    choices = db.relationship("ChoiceModel", foreign_keys=[question_id, language_id], uselist=True,
+    choices = db.relationship(ChoiceModel, foreign_keys=[question_id, language_id], uselist=True,
                               order_by="ChoiceModel.choice_id",
-                              primaryjoin="QuestionModel.question_id==ChoiceModel.question_id and QuestionModel.language_id==ChoiceModel.language_id")
+                              primaryjoin="QuestionModel.question_id==ChoiceModel.question_id and"
+                                          " QuestionModel.language_id==ChoiceModel.language_id")
+
+    answers = db.relationship(AnswerModel, foreign_keys=[question_id], uselist=True,
+                              order_by="AnswerModel.choice_id",
+                              primaryjoin="QuestionModel.question_id==AnswerModel.question_id")
 
     # choices = relationship
     # choices = db.relationship(

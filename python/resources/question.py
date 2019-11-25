@@ -1,22 +1,23 @@
+import copy
+import time
+
 from flask import current_app, abort
 from flask_restful import Resource, fields, marshal_with
 from flask_restful.reqparse import RequestParser
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql.expression import func
 
-from app import hash_ids, HashidsEncode
-from models import db
-from common import code, pretty_result
-from models.choice import ChoiceModel
-from models.question import QuestionModel
-from models.language import LanguageModel
-import time
+from app import hash_ids_choice, hash_ids_language, hash_ids_question, HashidsEncode
 
+from common import code, pretty_result
+from models import db
+from models.language import LanguageModel
+from models.question import QuestionModel
 from . import response_base_fields
-import copy
+from distutils.util import strtobool
 
 language_fields = {
-    'id': HashidsEncode(attribute='id'),
+    'id': HashidsEncode(attribute='id', hash_ids=hash_ids_language),
     'code': fields.String,
 }
 
@@ -27,10 +28,10 @@ class QuestionsCountResource(Resource):
 
     def get(self):
         start_time = time.time()
-        self.parser.add_argument("language_id", type=str, location="args", default='9erj4rd8')
+        self.parser.add_argument("language_id", type=str, location="args", default='g51851on')
         args = self.parser.parse_args()
         '''17 is en'''
-        language_id = hash_ids.decode(args.language_id)
+        language_id = hash_ids_language.decode(args.language_id)
         count = QuestionModel.query.filter(QuestionModel.language_id == language_id).count()
 
         data = {
@@ -73,19 +74,24 @@ language_fields = {
 }
 
 choice_fields = {
-    'choice_id': fields.Integer,
+    'choice_id': HashidsEncode(attribute='choice_id', hash_ids=hash_ids_choice),
     'choice': fields.String,
     # 'useflg': fields.Boolean
 }
 
+answer_fields = {
+    'choice_id': HashidsEncode(attribute='choice_id', hash_ids=hash_ids_choice),
+}
+
 question_fields = {
     # 'id': HashidsEncode(attribute='id'),
-    'question_id': HashidsEncode(attribute='question_id'),
-    'language_id': HashidsEncode(attribute='language_id'),
+    'question_id': HashidsEncode(attribute='id', hash_ids=hash_ids_question),
+    'language_id': HashidsEncode(attribute='id', hash_ids=hash_ids_language),
     'question': fields.String,
     'remarks': fields.String,
     'language': fields.Nested(language_fields),
     'choices': fields.List(fields.Nested(choice_fields)),
+    'answers': fields.List(fields.Nested(answer_fields)),
 }
 
 response_questions_fields = copy.copy(response_base_fields)
@@ -94,31 +100,35 @@ response_questions_fields['data'] = fields.Nested({'questions': fields.List(fiel
 
 class QuestionsListResource(Resource):
 
-    def __init__(self):
-        self.parser = RequestParser()
+    def __init__(self, request_parser=RequestParser()):
+        self.parser = request_parser
 
     @marshal_with(response_questions_fields)
     def get(self):
         start_time = time.time()
         self.parser.add_argument("offset", type=int, location="args", default=0)
-        self.parser.add_argument("limit", type=int, location="args", default=10)
+        self.parser.add_argument("limit", type=int, location="args", default=1)
+        self.parser.add_argument("random", type=strtobool, location="args", default=True)
 
-        '''9erj4rd8 17 en'''
-        '''mnonxz3g 102 zh-CN'''
-        self.parser.add_argument("language_id", type=str, location="args", default='9erj4rd8')
+        '''g51851on 17 en'''
+        '''dm1qgqky 102 zh-CN'''
+        self.parser.add_argument("language_id", type=str, location="args", default='g51851on')
 
         args = self.parser.parse_args()
         if args.limit >= 50:
             return pretty_result(code.DB_ERROR, 'limit > 50')
 
-        language_id = hash_ids.decode(args.language_id)
+        language_id = hash_ids_language.decode(args.language_id)
 
+        # print(args.random)
         try:
-            questions = QuestionModel.query. \
-                outerjoin(ChoiceModel,
-                          ChoiceModel.language_id == QuestionModel.language_id \
-                          and ChoiceModel.question_id == QuestionModel.question_id). \
-                filter(QuestionModel.useflg). \
+            questions_filter = QuestionModel.query. \
+                filter(QuestionModel.language_id == language_id). \
+                filter(QuestionModel.useflg)
+            if args.random:
+                questions_filter = questions_filter.order_by(func.rand())
+
+            questions = questions_filter. \
                 limit(args.limit). \
                 offset(args.offset). \
                 all()
@@ -128,73 +138,3 @@ class QuestionsListResource(Resource):
             return pretty_result(code.PARAM_ERROR, 'DB Error!', start_time=start_time)
         else:
             return pretty_result(code.OK, start_time=start_time, data={'questions': questions})
-
-
-language_fields = {
-    'code': fields.String,
-}
-
-question_fields = {
-    # 'id': HashidsEncode(attribute='id'),
-    'question_id': HashidsEncode(attribute='question_id'),
-    'language_id': HashidsEncode(attribute='language_id'),
-    'question': fields.String,
-    'remarks': fields.String,
-    'language': fields.Nested(language_fields),
-}
-
-response_question_fields = copy.copy(response_base_fields)
-response_question_fields['data'] = fields.Nested({'question': fields.Nested(question_fields)})
-
-
-class QuestionResource(Resource):
-
-    @staticmethod
-    @marshal_with(response_question_fields)
-    def get(language_id, question_id):
-        start_time = time.time()
-        language_id = hash_ids.decode(language_id)
-        question_id = hash_ids.decode(question_id)
-
-        if not language_id: abort(404)
-        if not question_id: abort(404)
-
-        try:
-            question = QuestionModel.query.filter(QuestionModel.language_id == language_id). \
-                filter(QuestionModel.question_id == question_id). \
-                one()
-            # print(question)
-            if not question: abort(404)
-        except SQLAlchemyError as e:
-            current_app.logger.error(e)
-            db.session.rollback()
-            return pretty_result(code.DB_ERROR, 'DB Error!')
-        else:
-            return pretty_result(code.OK, start_time=start_time, data={'question': question})
-
-
-response_question2_fields = copy.copy(response_base_fields)
-response_question2_fields['data'] = fields.Nested({'question': fields.Nested(question_fields)})
-
-
-class QuestionRandomResource(Resource):
-
-    @staticmethod
-    @marshal_with(response_question2_fields)
-    def get(language_id):
-        start_time = time.time()
-        language_id = hash_ids.decode(language_id)
-
-        if not language_id: abort(404)
-
-        try:
-            question = QuestionModel.query.filter(QuestionModel.language_id == language_id). \
-                order_by(func.rand()).limit(1).one()
-            # print(question)
-            if not question: abort(404)
-        except SQLAlchemyError as e:
-            current_app.logger.error(e)
-            db.session.rollback()
-            return pretty_result(code.DB_ERROR, 'DB Error!')
-        else:
-            return pretty_result(code.OK, start_time=start_time, data={'question': question})

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+import os
 import string
 import flask_restful
 from flask import Flask, abort, jsonify
@@ -7,19 +7,26 @@ from models import db
 from common import code, pretty_result
 from flask_restful import fields
 from flask_cors import CORS
+from config import HASHIDS_SALT_LANGUAGE, HASHIDS_SALT_QUESTION, HASHIDS_SALT_CHOICE
 
 app = Flask(__name__)
 CORS(app)
 
-hash_ids = Hashids(salt='2c4w6ag2rtqemd3e', min_length=8, alphabet=string.ascii_lowercase + string.digits)
+hash_ids_language = Hashids(salt=HASHIDS_SALT_LANGUAGE, min_length=8, alphabet=string.ascii_lowercase + string.digits)
+hash_ids_question = Hashids(salt=HASHIDS_SALT_QUESTION, min_length=8, alphabet=string.ascii_lowercase + string.digits)
+hash_ids_choice = Hashids(salt=HASHIDS_SALT_CHOICE, min_length=8, alphabet=string.ascii_lowercase + string.digits)
 
 handle_exception = app.handle_exception
 handle_user_exception = app.handle_user_exception
 
 
 class HashidsEncode(fields.Raw):
+    def __init__(self, hash_ids=Hashids, **kwargs):
+        super(HashidsEncode, self).__init__(**kwargs)
+        self.hash_ids = hash_ids
+
     def format(self, value):
-        return hash_ids.encode(value)
+        return self.hash_ids.encode(value)
 
 
 def _custom_abort(http_status_code, **kwargs):
