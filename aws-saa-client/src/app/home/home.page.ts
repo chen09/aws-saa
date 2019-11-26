@@ -11,7 +11,12 @@ import _ from 'lodash';
 })
 export class HomePage {
 
+
+    question: Question = new Question();
+
     constructor(public questionService: QuestionService) {
+
+
         this.questionService.test().subscribe(
             (questionResponse: QuestionResponse) => {
                 // console.log(questionResponse);
@@ -26,8 +31,8 @@ export class HomePage {
                     return;
                 }
                 const question: Question = questions[0];
+                this.question = question;
                 console.log(question);
-
 
             },
             error => console.error(error),
