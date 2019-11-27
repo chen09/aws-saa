@@ -1,0 +1,65 @@
+<ion-header translucent>
+    <ion-toolbar>
+        <ion-title>AWS SAA</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content fullscreen>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>Question {{currentIndex + 1}}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            {{question.question}}
+
+            <ion-list>
+                <ion-list-header>choices</ion-list-header>
+                <ion-item *ngFor="let choice of question.choices">
+                    <ion-label class="ion-text-wrap">{{choice.choice}}</ion-label>
+                    <ion-checkbox color="primary" slot="start" [(ngModel)]="choice.isChecked"
+                                  (ionChange)="choiceChanged()"></ion-checkbox>
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+
+        <section>
+            <ion-grid>
+                <ion-row>
+                    <ion-col>
+                        <ion-button expand="full" color="primary" [disabled]="isDisableAnswer"
+                                    (click)="checkAnswer()?presentOK():presentNG()">
+                            <ion-icon name="md-checkmark"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <ion-button color="tertiary" class="ion-float-left" [disabled]="disableClickLeft()"
+                                    (click)="clickLeft($event)">
+                            <ion-icon slot="start" name="arrow-back"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+
+                    <ion-col>
+                        <ion-button expand="full" color="success">
+                            <ion-icon name="list"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                    <ion-col>
+                        <ion-button color="tertiary" class="ion-float-right"
+                                    [disabled]="disableClickRight()" (click)="clickRight($event)">
+                            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+
+                </ion-row>
+            </ion-grid>
+
+        </section>
+
+    </ion-card>
+
+
+</ion-content>

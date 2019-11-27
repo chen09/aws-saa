@@ -107,7 +107,7 @@ class QuestionsListResource(Resource):
     def get(self):
         start_time = time.time()
         self.parser.add_argument("offset", type=int, location="args", default=0)
-        self.parser.add_argument("limit", type=int, location="args", default=1)
+        self.parser.add_argument("limit", type=int, location="args", default=10)
         self.parser.add_argument("random", type=strtobool, location="args", default=True)
 
         '''g51851on 17 en'''
