@@ -25,6 +25,15 @@
 
         <section>
             <ion-grid>
+
+                <ion-row *ngIf="!isDisableRemarks && question.remarks">
+                    <ion-col>
+                        <ion-button expand="full" color="warning" (click)="showRemarks()">
+                            <ion-icon name="book"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+
                 <ion-row>
                     <ion-col>
                         <ion-button expand="full" color="primary" [disabled]="isDisableAnswer"
@@ -43,7 +52,7 @@
                     </ion-col>
 
                     <ion-col>
-                        <ion-button expand="full" color="success">
+                        <ion-button expand="full" color="success" (click)="init()">
                             <ion-icon name="list"></ion-icon>
                         </ion-button>
                     </ion-col>

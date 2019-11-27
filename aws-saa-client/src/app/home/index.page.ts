@@ -1,27 +1,45 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {QuestionService} from '../question.service';
 import {QuestionResponse} from '../Entity/question-response';
 import {Question} from '../Entity/question';
 import _ from 'lodash';
 import {Choice} from '../Entity/choice';
-import {AlertController} from '@ionic/angular';
-import {OverlayEventDetail} from '@ionic/core';
+import {AlertController, ModalController} from '@ionic/angular';
+import {TestComponent} from './test/test.component';
+
 
 @Component({
     selector: 'app-home',
     templateUrl: 'index.page.html',
     styleUrls: ['index.page.scss'],
 })
-export class IndexPage {
+export class IndexPage implements OnInit {
     inited = false;
     currentIndex = -1;
-    questions: Question[];
+    questions: Question[] = [];
     question: Question = new Question();
     isDisableAnswer = true;
+    isDisableRemarks = true;
 
-    constructor(public questionService: QuestionService, public alertController: AlertController) {
+    constructor(public questionService: QuestionService,
+                public alertController: AlertController,
+                public modalController: ModalController) {
+
+    }
+
+    ngOnInit() {
+        this.init();
+    }
+
+    init() {
         this.inited = false;
-        this.questionService.test().subscribe(
+        this.currentIndex = -1;
+        this.questions = [];
+        this.question = new Question();
+        this.isDisableAnswer = true;
+        this.isDisableRemarks = true;
+
+        this.questionService.getQuestions().subscribe(
             (questionResponse: QuestionResponse) => {
                 if (questionResponse.status !== 0) {
                     console.error('');
@@ -46,6 +64,7 @@ export class IndexPage {
         );
     }
 
+
     clickLeft($event) {
         if (!this.inited) {
             return;
@@ -56,6 +75,7 @@ export class IndexPage {
         this.currentIndex--;
         this.question = this.questions[this.currentIndex];
         this.choiceChanged();
+        this.isDisableRemarks = true;
     }
 
     clickRight($event) {
@@ -68,6 +88,7 @@ export class IndexPage {
         this.currentIndex++;
         this.question = this.questions[this.currentIndex];
         this.choiceChanged();
+        this.isDisableRemarks = true;
     }
 
     disableAnswer(): boolean {
@@ -146,5 +167,25 @@ export class IndexPage {
         });
 
         await alert.present();
+
+        await alert.onDidDismiss().then((data) => {
+            this.clearChoice();
+            this.isDisableRemarks = false;
+        });
+    }
+
+    showRemarks() {
+        this.presentModal();
+        console.log('showRemarks');
+    }
+
+    async presentModal() {
+        const modal = await this.modalController.create({
+            component: TestComponent,
+            componentProps: {
+                remarks: this.question.remarks
+            }
+        });
+        return await modal.present();
     }
 }

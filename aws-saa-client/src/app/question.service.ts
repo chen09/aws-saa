@@ -11,7 +11,7 @@ export class QuestionService {
     constructor(private http: HttpClient) {
     }
 
-    test(): Observable<QuestionResponse> {
+    getQuestions(): Observable<QuestionResponse> {
         return this.http.get<QuestionResponse>('http://127.0.0.1:5000/api/v1/questions');
     }
 }
