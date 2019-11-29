@@ -19,19 +19,5 @@ services:
       - ${DB_PORT}:3306
       - ${DB_PORT2}:33060
 
-  db-testing:
-    image: mysql
-    volumes:
-      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-    tmpfs:
-      - /var/lib/mysql
-      - /var/log/mysql
-    environment:
-      # - MYSQL_DATABASE=${DB_NAME}
-      # - MYSQL_USER=${DB_USER}
-      # - MYSQL_PASSWORD=${DB_PASS}
-      - MYSQL_ROOT_PASSWORD=${DB_PASS}
-      # - TZ=${TZ}
-
 volumes:
   aws_saa_volume:

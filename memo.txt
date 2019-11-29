@@ -25,6 +25,7 @@ docker start mysql_test
 docker exec mysql_test sh -c 'exec mysqldump --all-databases -uroot -proot1234' > /tmp/all-databases.sql
 docker cp  mysql_test:/tmp/all-databases.sql ./
 
+docker exec mysql_test sh -c 'exec mysqldump --all-databases -uroot -proot1234' > /tmp/all-databases.sql
 
 
 

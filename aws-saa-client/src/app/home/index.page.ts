@@ -5,7 +5,7 @@ import {Question} from '../Entity/question';
 import _ from 'lodash';
 import {Choice} from '../Entity/choice';
 import {AlertController, ModalController} from '@ionic/angular';
-import {TestComponent} from './test/test.component';
+import {RemarksComponent} from './remarks/remarks.component';
 
 
 @Component({
@@ -14,10 +14,12 @@ import {TestComponent} from './test/test.component';
     styleUrls: ['index.page.scss'],
 })
 export class IndexPage implements OnInit {
+    limit = 9;
     inited = false;
     currentIndex = -1;
     questions: Question[] = [];
     question: Question = new Question();
+    answers: boolean[] = [];
     isDisableAnswer = true;
     isDisableRemarks = true;
 
@@ -39,7 +41,7 @@ export class IndexPage implements OnInit {
         this.isDisableAnswer = true;
         this.isDisableRemarks = true;
 
-        this.questionService.getQuestions().subscribe(
+        this.questionService.getQuestions(this.limit).subscribe(
             (questionResponse: QuestionResponse) => {
                 if (questionResponse.status !== 0) {
                     console.error('');
@@ -56,6 +58,7 @@ export class IndexPage implements OnInit {
                 this.questions = questions;
                 this.question = question;
                 this.inited = true;
+                this.answers = _.fill(Array(_.size(this.questions)), false);
             },
             error => console.error(error),
             () => {
@@ -125,6 +128,7 @@ export class IndexPage implements OnInit {
         for (const answer of this.question.answers) {
             const tmp: Choice = _.find(this.question.choices, {choice_id: answer.choice_id});
             if (!tmp.isChecked) {
+                this.answers[this.currentIndex] = false;
                 return false;
             }
         }
@@ -134,9 +138,11 @@ export class IndexPage implements OnInit {
             }
             const tmp: Choice = _.find(this.question.answers, {choice_id: choice.choice_id});
             if (!tmp) {
+                this.answers[this.currentIndex] = false;
                 return false;
             }
         }
+        this.answers[this.currentIndex] = true;
         return true;
     }
 
@@ -147,6 +153,14 @@ export class IndexPage implements OnInit {
         this.choiceChanged();
     }
 
+    isAllCorrect(): boolean {
+        for (const answer of this.answers) {
+            if (!answer) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     async presentOK() {
         const alert = await this.alertController.create({
@@ -181,7 +195,7 @@ export class IndexPage implements OnInit {
 
     async presentModal() {
         const modal = await this.modalController.create({
-            component: TestComponent,
+            component: RemarksComponent,
             componentProps: {
                 remarks: this.question.remarks
             }

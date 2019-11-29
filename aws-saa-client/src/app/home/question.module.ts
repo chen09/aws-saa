@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
 import {IndexPage} from './index.page';
-import {TestComponent} from './test/test.component';
+import {RemarksComponent} from './remarks/remarks.component';
 
 @NgModule({
     imports: [
@@ -17,10 +17,10 @@ import {TestComponent} from './test/test.component';
                 path: '',
                 component: IndexPage
             }
-        ])
+        ]),
     ],
-    declarations: [IndexPage, TestComponent],
-    entryComponents: [TestComponent]
+    declarations: [IndexPage, RemarksComponent],
+    entryComponents: [RemarksComponent]
 })
 export class QuestionModule {
 }
