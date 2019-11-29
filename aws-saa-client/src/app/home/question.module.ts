@@ -6,6 +6,7 @@ import {RouterModule} from '@angular/router';
 
 import {IndexPage} from './index.page';
 import {RemarksComponent} from './remarks/remarks.component';
+import {SharingModule} from '../common/sharing.module';
 
 @NgModule({
     imports: [
@@ -18,6 +19,7 @@ import {RemarksComponent} from './remarks/remarks.component';
                 component: IndexPage
             }
         ]),
+        SharingModule
     ],
     declarations: [IndexPage, RemarksComponent],
     entryComponents: [RemarksComponent]
