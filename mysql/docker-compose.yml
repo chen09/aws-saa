@@ -4,11 +4,9 @@ services:
     build: ./sql
     container_name: mysql_aws_saa
     volumes:
-      - aws_saa_volume:/var/lib/mysql
-      - aws_saa_volume:/var/log/mysql
-      # - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-      # - ./docker/mysql:/etc/mysql/conf.d
-      # - ./initdb.d:/docker-entrypoint-initdb.d
+      - ./db/mysql_data:/var/lib/mysql
+      - ./db/mysql_init:/docker-entrypoint-initdb.d
+      - ./db/mysql_log:/var/log/mysql
     environment:
       - MYSQL_DATABASE=${DB_NAME}
       # - MYSQL_USER=${DB_USER}
@@ -19,5 +17,3 @@ services:
       - ${DB_PORT}:3306
       - ${DB_PORT2}:33060
 
-volumes:
-  aws_saa_volume:
