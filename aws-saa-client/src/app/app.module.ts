@@ -9,7 +9,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
-import {ConfigComponent} from './home/config/config.component';
+import {ConfigComponent} from './config/config.component';
 
 @NgModule({
     declarations: [AppComponent, ConfigComponent],

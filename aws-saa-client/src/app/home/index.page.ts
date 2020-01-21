@@ -14,7 +14,7 @@ import {RemarksComponent} from './remarks/remarks.component';
     styleUrls: ['index.page.scss'],
 })
 export class IndexPage implements OnInit {
-    limit = 3;
+    limit;
     inited = false;
     currentIndex = -1;
     questions: Question[] = [];
@@ -40,6 +40,7 @@ export class IndexPage implements OnInit {
         this.question = new Question();
         this.isDisableAnswer = true;
         this.isDisableRemarks = true;
+        this.limit = this.questionService.getLimit();
 
         this.questionService.getQuestions(this.limit).subscribe(
             (questionResponse: QuestionResponse) => {
