@@ -14,7 +14,7 @@ import {RemarksComponent} from './remarks/remarks.component';
     styleUrls: ['index.page.scss'],
 })
 export class IndexPage implements OnInit {
-    limit = 9;
+    limit = 3;
     inited = false;
     currentIndex = -1;
     questions: Question[] = [];

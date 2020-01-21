@@ -105,3 +105,4 @@ venv.bak/
 
 vendor/
 .idea/
+mysql/db/mysql_data/
