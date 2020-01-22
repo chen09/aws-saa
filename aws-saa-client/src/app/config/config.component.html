@@ -1,4 +1,5 @@
-<ion-menu side="start" type="overlay" menuId="first" contentId="menuContent">
+<ion-menu side="start" type="overlay" menuId="first" contentId="menuContent" (ionWillOpen)="menuOpen()"
+          (ionDidClose)="menuClosed()">
     <ion-header>
         <ion-toolbar color="primary">
             <ion-title>Config</ion-title>

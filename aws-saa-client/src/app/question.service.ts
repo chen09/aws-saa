@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {QuestionResponse} from './Entity/question-response';
 import {environment} from '../environments/environment';
 import _ from 'lodash';
@@ -9,6 +9,8 @@ import _ from 'lodash';
     providedIn: 'root'
 })
 export class QuestionService {
+    private limitSubject = new Subject<number>();
+    public titleObservable = this.limitSubject.asObservable();
 
     constructor(private http: HttpClient) {
     }
@@ -32,5 +34,9 @@ export class QuestionService {
 
     setLimit(limit: number) {
         localStorage.setItem('limit', _.toString(limit));
+    }
+
+    limitChanged(limit: number) {
+        this.limitSubject.next(limit);
     }
 }

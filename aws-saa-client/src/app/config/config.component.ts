@@ -10,6 +10,7 @@ import {ActionSheetButton} from '@ionic/core/dist/types/components/action-sheet/
     styleUrls: ['./config.component.scss'],
 })
 export class ConfigComponent implements OnInit {
+    oldlimit;
     limit;
 
     constructor(public questionService: QuestionService,
@@ -19,11 +20,12 @@ export class ConfigComponent implements OnInit {
 
     ngOnInit() {
         this.limit = this.questionService.getLimit();
+        this.oldlimit = this.limit;
     }
 
     async limitClick() {
         let buttonArray: ActionSheetButton[] = [];
-        for (let i = 1; i < 9; i++) {
+        for (let i = 1; i < 16; i++) {
             buttonArray = _.concat(buttonArray,
                 {
                     text: _.toString(i),
@@ -40,5 +42,15 @@ export class ConfigComponent implements OnInit {
             buttons: buttonArray
         });
         await actionSheet.present();
+    }
+
+    menuOpen() {
+        this.oldlimit = this.limit;
+    }
+
+    menuClosed() {
+        if (this.oldlimit !== this.limit) {
+            this.questionService.limitChanged(this.limit);
+        }
     }
 }

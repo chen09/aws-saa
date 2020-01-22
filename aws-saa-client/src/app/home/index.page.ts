@@ -41,6 +41,11 @@ export class IndexPage implements OnInit {
         this.isDisableAnswer = true;
         this.isDisableRemarks = true;
         this.limit = this.questionService.getLimit();
+        this.questionService.titleObservable.subscribe(
+            (limit: number) => {
+                this.init();
+            }
+        );
 
         this.questionService.getQuestions(this.limit).subscribe(
             (questionResponse: QuestionResponse) => {
